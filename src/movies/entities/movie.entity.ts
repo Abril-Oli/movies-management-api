@@ -37,6 +37,10 @@ export class Movie {
   @Column({ type: 'integer', nullable: true })
   episodeId: number | null;
 
+  @ApiProperty({ description: 'SWAPI resource UID.', nullable: true, example: '1' })
+  @Column({ type: 'varchar', length: 50, nullable: true, unique: true })
+  swapiId: string | null;
+
   @ApiProperty({ description: 'Creation timestamp.', format: 'date-time' })
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
