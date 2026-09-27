@@ -33,10 +33,6 @@ export class Movie {
   @Column({ type: 'date' })
   releaseDate: string;
 
-  @ApiProperty({ description: 'Episode number.', nullable: true, example: 4 })
-  @Column({ type: 'integer', nullable: true })
-  episodeId: number | null;
-
   @ApiProperty({ description: 'SWAPI resource UID.', nullable: true, example: '1' })
   @Column({ type: 'varchar', length: 50, nullable: true, unique: true })
   swapiId: string | null;

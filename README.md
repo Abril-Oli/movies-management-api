@@ -1,114 +1,375 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Movies Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST desarrollada con **NestJS**, **TypeORM** y **PostgreSQL** para la gestión de películas.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+El proyecto implementa autenticación y autorización mediante **JWT**, control de acceso por roles (`user` / `admin`), operaciones CRUD sobre películas y sincronización manual con la API pública **SWAPI.tech**.
 
-## Description
+## Tecnologías
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+* **Node.js 24**
+* **NestJS**
+* **TypeScript**
+* **TypeORM**
+* **PostgreSQL**
+* **JWT**
+* **bcrypt**
+* **Swagger / OpenAPI**
+* **Jest**
+* **Docker / Docker Compose**
+* **SWAPI.tech**
 
-## Project setup
+## Arquitectura
 
-```bash
-$ npm install
+El proyecto está organizado por módulos siguiendo la arquitectura de NestJS:
+
+```text
+src/
+├── auth/          # Registro, login y JWT
+├── users/         # Gestión de usuarios
+├── roles/         # Roles y autorización
+├── movies/        # Gestión y CRUD de películas
+├── star-wars/     # Integración con SWAPI.tech
+├── common/        # Guards, decorators y utilidades compartidas
+└── main.ts        # Punto de entrada de la aplicación
 ```
 
-## Compile and run the project
+## Requisitos
+
+Antes de comenzar, asegurate de tener instalado:
+
+* Node.js 24 o una versión compatible con las dependencias del proyecto.
+* npm.
+* Docker Desktop con Docker Compose.
+* Git.
+
+## Instalación local
+
+### 1. Clonar el repositorio
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone <URL_DEL_REPOSITORIO>
+cd movies-management-api
 ```
 
-## Run tests
+### 2. Instalar dependencias
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Deployment
+### 3. Configurar variables de entorno
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Crear un archivo `.env` en la raíz del proyecto.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+> El archivo `.env` está incluido en `.gitignore` y no debe subirse al repositorio.
+
+Ejemplo:
+
+```dotenv
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=movies
+DB_PASSWORD=movies_dev_password
+DB_NAME=movies_management
+
+SWAPI_BASE_URL=https://www.swapi.tech/api
+
+JWT_SECRET=replace-this-with-a-long-random-secret
+```
+
+Para entornos reales, reemplazar `JWT_SECRET` por un secreto largo y aleatorio.
+
+También se puede utilizar `.env.example` como referencia.
+
+### 4. Iniciar PostgreSQL
+
+El proyecto utiliza PostgreSQL mediante Docker Compose.
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker compose up -d postgres
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Verificar que el contenedor esté funcionando:
 
-## Observability
+```bash
+docker compose ps
+```
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+### 5. Ejecutar las migraciones
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+```bash
+npm run migration:run
+```
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+Este comando prepara la estructura de la base de datos mediante las migraciones de TypeORM.
 
-## Resources
+### 6. Crear los roles iniciales
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm run seed:roles
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+El seed es idempotente, por lo que puede ejecutarse más de una vez sin duplicar los roles existentes.
 
-## Support
+Los roles disponibles son:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+* `user`
+* `admin`
 
-## Stay in touch
+### 7. Iniciar la aplicación
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run start:dev
+```
 
-## License
+La API estará disponible en:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```text
+http://localhost:3000
+```
+
+La documentación Swagger estará disponible en:
+
+```text
+http://localhost:3000/api
+```
+
+---
+
+## Autenticación y autorización
+
+La API utiliza **JWT Bearer Authentication**.
+
+### Roles
+
+| Rol     | Permisos                                                       |
+| ------- | -------------------------------------------------------------- |
+| `user`  | Consultar películas                                            |
+| `admin` | Consultar, crear, actualizar, eliminar y sincronizar películas |
+
+Los endpoints protegidos requieren un JWT válido.
+
+Los endpoints exclusivos de administración requieren además un usuario con rol `admin`.
+
+---
+
+## Flujo de autenticación
+
+### 1. Registrar un usuario
+
+Desde Swagger:
+
+```text
+POST /auth/sign-up
+```
+
+Body:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "StrongPass123!"
+}
+```
+
+Los usuarios registrados reciben automáticamente el rol `user`.
+
+### 2. Iniciar sesión
+
+```text
+POST /auth/sign-in
+```
+
+Body:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "StrongPass123!"
+}
+```
+
+La respuesta devuelve un `access_token`.
+
+### 3. Autorizar Swagger
+
+En Swagger:
+
+1. Ejecutar `POST /auth/sign-in`.
+2. Copiar el `access_token`.
+3. Seleccionar **Authorize**.
+4. Ingresar el token como Bearer token.
+5. Ejecutar los endpoints protegidos.
+
+### Probar endpoints de administrador
+
+Para probar los endpoints exclusivos de `admin`, se puede modificar el rol de un usuario local desde DBeaver o `psql`:
+
+```sql
+UPDATE users
+SET "roleId" = (
+  SELECT id
+  FROM roles
+  WHERE name = 'admin'
+)
+WHERE email = 'user@example.com';
+```
+
+Después de modificar el rol, iniciar sesión nuevamente para obtener un nuevo JWT.
+
+> Los tokens emitidos anteriormente conservan el rol que tenían al momento de ser generados.
+
+---
+
+## Endpoints
+
+### Autenticación
+
+| Método | Ruta            | Acceso  | Descripción                                |
+| ------ | --------------- | ------- | ------------------------------------------ |
+| `POST` | `/auth/sign-up` | Público | Registra un nuevo usuario.                 |
+| `POST` | `/auth/sign-in` | Público | Valida las credenciales y devuelve un JWT. |
+
+### Roles
+
+| Método | Ruta         | Acceso  | Descripción                  |
+| ------ | ------------ | ------- | ---------------------------- |
+| `GET`  | `/roles`     | `admin` | Lista los roles disponibles. |
+| `GET`  | `/roles/:id` | `admin` | Obtiene un rol por ID.       |
+
+### Películas
+
+| Método   | Ruta                      | Acceso          | Descripción                                 |
+| -------- | ------------------------- | --------------- | ------------------------------------------- |
+| `GET`    | `/movies/list`            | `user`, `admin` | Lista las películas almacenadas localmente. |
+| `GET`    | `/movies/item/:id`        | `user`          | Obtiene una película por ID.                |
+| `POST`   | `/movies/sync`            | `admin`         | Sincroniza las películas desde SWAPI.tech.  |
+| `POST`   | `/movies/create-item`     | `admin`         | Crea una película local.                    |
+| `PATCH`  | `/movies/update-item/:id` | `admin`         | Actualiza una película local.               |
+| `DELETE` | `/movies/delete-item/:id` | `admin`         | Elimina una película local.                 |
+
+La documentación completa de los endpoints, parámetros y modelos está disponible en Swagger.
+
+---
+
+## Sincronización con SWAPI.tech
+
+La sincronización con SWAPI.tech se ejecuta manualmente mediante:
+
+```text
+POST /movies/sync
+```
+
+El endpoint requiere autenticación y rol `admin`.
+
+La sincronización importa o actualiza las películas obtenidas desde SWAPI.tech.
+
+Las películas externas se identifican mediante su `swapiId`, permitiendo realizar un **upsert** y evitar duplicados.
+
+Ejemplo de respuesta:
+
+```json
+{
+  "synchronized": 6
+}
+```
+
+---
+
+## Códigos HTTP principales
+
+La API utiliza códigos HTTP estándar, entre ellos:
+
+| Código | Significado                                   |
+| ------ | --------------------------------------------- |
+| `200`  | Operación exitosa                             |
+| `201`  | Recurso creado                                |
+| `400`  | Datos de entrada inválidos                    |
+| `401`  | JWT faltante o inválido                       |
+| `403`  | El usuario no tiene permisos suficientes      |
+| `404`  | Recurso no encontrado                         |
+| `409`  | Conflicto, por ejemplo un email ya registrado |
+
+---
+
+## Pruebas y calidad
+
+### Pruebas unitarias
+
+```bash
+npm test -- --runInBand
+```
+
+### Cobertura
+
+```bash
+npm run test:cov -- --runInBand
+```
+
+### Compilar el proyecto
+
+```bash
+npm run build
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+---
+
+## Comandos útiles
+
+### Ver estado de PostgreSQL
+
+```bash
+docker compose ps
+```
+
+### Ver logs de PostgreSQL
+
+```bash
+docker compose logs -f postgres
+```
+
+### Detener PostgreSQL conservando los datos
+
+```bash
+docker compose down
+```
+
+### Detener PostgreSQL y eliminar los datos
+
+```bash
+docker compose down -v
+```
+
+> `docker compose down -v` elimina el volumen de PostgreSQL y, por lo tanto, todos los datos almacenados localmente.
+
+---
+
+## Variables de entorno
+
+| Variable         | Descripción                           |
+| ---------------- | ------------------------------------- |
+| `DB_HOST`        | Host de PostgreSQL                    |
+| `DB_PORT`        | Puerto de PostgreSQL                  |
+| `DB_USERNAME`    | Usuario de PostgreSQL                 |
+| `DB_PASSWORD`    | Contraseña de PostgreSQL              |
+| `DB_NAME`        | Nombre de la base de datos            |
+| `SWAPI_BASE_URL` | URL base de SWAPI.tech                |
+| `JWT_SECRET`     | Secreto utilizado para firmar los JWT |
+
+---
+
+## Documentación de la API
+
+Una vez iniciada la aplicación, la documentación interactiva está disponible mediante Swagger:
+
+```text
+http://localhost:3000/api
+```
+
+Desde Swagger se pueden consultar los endpoints, modelos, parámetros y probar las operaciones directamente contra la API.

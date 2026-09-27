@@ -15,7 +15,6 @@ describe('MoviesSyncService', () => {
     description: 'A Star Wars Film',
     properties: {
       title: 'A New Hope',
-      episode_id: 4,
       director: 'George Lucas',
       producer: 'Gary Kurtz',
       release_date: '1977-05-25',
@@ -40,8 +39,8 @@ describe('MoviesSyncService', () => {
     await expect(service.syncAllFilms()).resolves.toBe(2);
     expect(repository.upsert).toHaveBeenCalledWith(
       [
-        expect.objectContaining({ swapiId: '1', episodeId: 4, title: 'A New Hope' }),
-        expect.objectContaining({ swapiId: '2', episodeId: 4, title: 'A New Hope' }),
+        expect.objectContaining({ swapiId: '1', title: 'A New Hope' }),
+        expect.objectContaining({ swapiId: '2', title: 'A New Hope' }),
       ],
       ['swapiId'],
     );

@@ -8,7 +8,6 @@ describe('SwapiFilmAdapter', () => {
     description: 'A Star Wars Film',
     properties: {
       title: 'A New Hope',
-      episode_id: 4,
       director: 'George Lucas',
       producer: 'Gary Kurtz',
       release_date: '1977-05-25',
@@ -24,7 +23,6 @@ describe('SwapiFilmAdapter', () => {
       director: 'George Lucas',
       producer: 'Gary Kurtz',
       releaseDate: '1977-05-25',
-      episodeId: 4,
     });
   });
 
@@ -39,7 +37,6 @@ describe('SwapiFilmAdapter', () => {
 
   it.each([
     { ...film, uid: 'not-numeric' },
-    { ...film, properties: { ...film.properties, episode_id: 'unknown' } },
     { ...film, properties: { ...film.properties, title: '' } },
     { ...film, properties: { ...film.properties, release_date: '25-05-1977' } },
   ])('rejects invalid film data', (invalidFilm) => {

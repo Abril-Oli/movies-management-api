@@ -20,6 +20,4 @@ export class UpdateMovieDto {
   })
   releaseDate?: string;
 
-  @ApiPropertyOptional({ description: 'Episode number; may be null.', nullable: true })
-  episodeId?: number | null;
 }

@@ -1,6 +1,5 @@
 export interface SwapiFilmProperties {
   title: string;
-  episode_id: number | string;
   director: string;
   producer: string;
   release_date: string;

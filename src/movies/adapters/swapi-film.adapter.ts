@@ -6,11 +6,9 @@ export class SwapiFilmAdapter {
   static toMovie(film: SwapiFilmResource): Partial<Movie> {
     const properties = film.properties;
     const swapiId = film.uid;
-    const episodeId = Number(properties.episode_id);
 
     if (
       !/^\d+$/.test(swapiId) ||
-      !Number.isSafeInteger(episodeId) ||
       !properties.title ||
       !properties.director ||
       !properties.producer ||
@@ -26,7 +24,6 @@ export class SwapiFilmAdapter {
       director: properties.director,
       producer: properties.producer,
       releaseDate: properties.release_date,
-      episodeId,
     };
   }
 }

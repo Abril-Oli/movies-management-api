@@ -13,7 +13,6 @@ describe('SwapiService', () => {
     uid: '1',
     properties: {
       title: 'A New Hope',
-      episode_id: 4,
       director: 'George Lucas',
       producer: 'Gary Kurtz',
       release_date: '1977-05-25',

@@ -16,7 +16,6 @@ export class CreateMoviesTable1790380800000 implements MigrationInterface {
         "director" character varying(255) NOT NULL,
         "producer" character varying(255) NOT NULL,
         "releaseDate" date NOT NULL,
-        "episodeId" integer,
         "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         CONSTRAINT "PK_movies_id" PRIMARY KEY ("id")

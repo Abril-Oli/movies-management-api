@@ -1,6 +1,9 @@
 import { jest } from '@jest/globals';
-import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
+import { GUARDS_METADATA, METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
 import { RequestMethod } from '@nestjs/common';
+import { ROLES_KEY } from '../../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
 import { RolesService } from '../services/roles.service';
 import { RolesController } from './roles.controller';
 
@@ -40,5 +43,13 @@ describe('RolesController', () => {
       RequestMethod.GET,
     );
     expect(Reflect.getMetadata(PATH_METADATA, RolesController.prototype.findOne)).toBe(':id');
+  });
+
+  it('requires an admin JWT for role routes', () => {
+    expect(Reflect.getMetadata(ROLES_KEY, RolesController)).toEqual(['admin']);
+    expect(Reflect.getMetadata(GUARDS_METADATA, RolesController)).toEqual([
+      JwtAuthGuard,
+      RolesGuard,
+    ]);
   });
 });
