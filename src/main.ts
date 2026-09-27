@@ -8,6 +8,7 @@ async function bootstrap() {
     .setTitle('Movies Management API')
     .setDescription('API for managing the movie catalog')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, swaggerDocument);

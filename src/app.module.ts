@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/modules/auth.module';
 import { MoviesModule } from './movies/modules/movies.module';
+import { RolesModule } from './roles/modules/roles.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -21,7 +23,9 @@ import { AppService } from './app.service';
         synchronize: false,
       }),
     }),
+    AuthModule,
     MoviesModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
