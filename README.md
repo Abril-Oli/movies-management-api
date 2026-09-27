@@ -274,25 +274,6 @@ Ejemplo de respuesta:
 }
 ```
 
----
-
-## Códigos HTTP principales
-
-La API utiliza códigos HTTP estándar, entre ellos:
-
-| Código | Significado                                   |
-| ------ | --------------------------------------------- |
-| `200`  | Operación exitosa                             |
-| `201`  | Recurso creado                                |
-| `400`  | Datos de entrada inválidos                    |
-| `401`  | JWT faltante o inválido                       |
-| `403`  | El usuario no tiene permisos suficientes      |
-| `404`  | Recurso no encontrado                         |
-| `409`  | Conflicto, por ejemplo un email ya registrado |
-
----
-
-## Pruebas y calidad
 
 ### Pruebas unitarias
 
